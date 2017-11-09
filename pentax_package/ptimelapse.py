@@ -20,9 +20,12 @@ from docopt import docopt
 from pentax_package import camera_control
 import os
 import time
+import sys
 
-if __name__ == '__main__':
-    arguments = docopt(__doc__)
+def main(args=None):
+    if args is None:
+        args = sys.argv[1:]
+    arguments = docopt(__doc__, argv=args)
     print(arguments)
 
     i = 1
@@ -42,3 +45,6 @@ if __name__ == '__main__':
         camera.take_picture(filename)
         time.sleep(int(arguments['-l']))
         i += 1
+
+if __name__ == "__main__":
+    main()
