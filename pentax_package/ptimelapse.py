@@ -41,6 +41,15 @@ def main(args=None):
 
     camera = camera_control.Camera()
 
+    if arguments['-m'] != 'GREEN':
+        camera.exposure_mode = arguments['-m']
+        if arguments['-t']:
+            camera.shutter_speed = arguments['-t']
+        if arguments['-a']:
+            camera.aperture = arguments['-a']
+        if arguments['-i']:
+            camera.iso = arguments['-i']
+
     if not os.path.exists(arguments['-d']):
         logger.error("Destination folder does not exist")
         exit(1)
