@@ -60,8 +60,9 @@ def main(args=None):
         camera.take_picture(filename)
         time_took = time.time() - time_taken
         sleep_time = int(arguments['-l']) - time_took
-        logger.info("Sleeping %f seconds" % sleep_time)
-        time.sleep(sleep_time)
+        if sleep_time > 0:
+            logger.info("Sleeping %f seconds" % sleep_time)
+            time.sleep(sleep_time)
         i += 1
 
     if arguments['-s']:
