@@ -1,5 +1,8 @@
 import subprocess
+import os
+import logging
 
+logger = logging.getLogger('ptimelapse')
 
 class Camera:
     exposure_mode = "GREEN"
@@ -9,12 +12,15 @@ class Camera:
     resolution = '10'
     quality = '3'
     output_file = "out.jpg"
+    temp_file = "/tmp/temp.jpg"
+    pslr_shoot_timeout = 10
+    FNULL = open(os.devnull, 'w')
 
     def take_picture(self, output_file=None):
         if output_file:
             self.output_file = output_file
         args = ['pslr-shoot', '-m', self.exposure_mode, '-r', self.resolution, '-q', self.quality,
-                '-o', self.output_file]
+                '-o', self.temp_file]
 
         if self.iso:
             args.append('-i')
@@ -29,7 +35,11 @@ class Camera:
             args.append(self.shutter_speed)
 
         try:
-            subprocess.run(args, check=True)
+            subprocess.run(args, check=True, timeout=self.pslr_shoot_timeout, stdout=self.FNULL)
         except(subprocess.CalledProcessError):
-            print("Failed to take picture non zero error code from pslr-shoot")
+            logger.error("Failed to take picture non zero error code from pslr-shoot")
             raise
+        except(subprocess.TimeoutExpired):
+            logger.error("Failed to take picture call to pslr-shoot timed out")
+            raise
+        os.rename(self.temp_file, self.output_file)
