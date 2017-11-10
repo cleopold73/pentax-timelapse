@@ -2,7 +2,7 @@
 
 Usage:
   ptimelapse [-f <prefix>] [-t <shutter-speed> ] [-a <aperture> ] [-i <iso> ] [-d <directory>] [-m <mode>] [-l <lapse>]
-             [-c <count>] [-s]
+             [-c <count>] [-s] [-b <bucket>] [-k <s3_key>]
   ptimelapse (-h | --help)
 
 Options:
@@ -16,7 +16,10 @@ Options:
   -l <lapse>             Lapse Duration in seconds [default: 30], needs to be 5 seconds or greater
   -c <count>             Number of frames to take if not specified run forever [default: 5]
   -s                     Upload to S3
+  -b <bucket>            S3 bucket [default: pentax-timelapse]
+  -k <s3_key>            S3 Key to put files inside bucket [default: default]
 """
+
 from docopt import docopt
 from pentax_package import camera_control, s3_upload
 import os
@@ -48,6 +51,8 @@ def main(args=None):
 
     if arguments['-s']:
         uploader = s3_upload.s3_uploader(arguments['-d'])
+        uploader.bucket = arguments['-b']
+        uploader.key_path = arguments['-k']
         uploader.run()
 
     while True:
