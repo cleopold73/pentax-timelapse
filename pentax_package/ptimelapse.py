@@ -47,7 +47,7 @@ def main(args=None):
         exit(1)
 
     if arguments['-s']:
-        uploader = s3_upload.s3_uploader('/home/cleopold/test')
+        uploader = s3_upload.s3_uploader(arguments['-d'])
         uploader.run()
 
     while True:
