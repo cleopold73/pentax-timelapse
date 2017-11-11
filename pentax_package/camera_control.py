@@ -33,7 +33,7 @@ class Camera:
         if self.shutter_speed:
             args.append('-t')
             args.append(self.shutter_speed)
-        logger.debug(args)
+        logger.info("Command Line: %s" % args)
         try:
             subprocess.run(args, check=True, timeout=self.pslr_shoot_timeout, stdout=self.FNULL)
         except subprocess.CalledProcessError:
