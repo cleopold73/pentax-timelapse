@@ -58,8 +58,9 @@ def main(args=None):
         logger.error("Minimum lapse duration is 5 seconds")
         exit(1)
 
+    uploader = None
     if arguments['-s']:
-        uploader = s3_upload.s3_uploader(arguments['-d'])
+        uploader = s3_upload.S3Uploader(arguments['-d'])
         uploader.bucket = arguments['-b']
         uploader.key_path = arguments['-k']
         uploader.run()

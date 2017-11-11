@@ -6,7 +6,7 @@ import logging
 
 logger = logging.getLogger('ptimelapse')
 
-class s3_uploader:
+class S3Uploader:
 
     key_path = 'default'
     bucket = 'pentax-timelapse'
@@ -16,6 +16,7 @@ class s3_uploader:
     stop = False
 
     def __init__(self, monitor_directory):
+        self.monitor_thread = threading.Thread(target=self.monitor)
         self.monitor_directory = monitor_directory
 
     def upload(self, filename):
@@ -54,7 +55,6 @@ class s3_uploader:
         logger.info("Exiting S3 upload thread")
 
     def run(self):
-        self.monitor_thread = threading.Thread(target=self.monitor)
         self.monitor_thread.start()
 
     def join(self):

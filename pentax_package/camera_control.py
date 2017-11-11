@@ -33,13 +33,13 @@ class Camera:
         if self.shutter_speed:
             args.append('-t')
             args.append(self.shutter_speed)
-
+        logger.debug(args)
         try:
             subprocess.run(args, check=True, timeout=self.pslr_shoot_timeout, stdout=self.FNULL)
-        except(subprocess.CalledProcessError):
+        except subprocess.CalledProcessError:
             logger.error("Failed to take picture non zero error code from pslr-shoot")
             raise
-        except(subprocess.TimeoutExpired):
+        except subprocess.TimeoutExpired:
             logger.error("Failed to take picture call to pslr-shoot timed out")
             raise
         os.rename(self.temp_file, self.output_file)
