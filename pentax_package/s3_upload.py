@@ -24,24 +24,22 @@ class S3Uploader:
         local_path = os.path.join(self.monitor_directory, filename)
         try:
             data = open(local_path, 'rb')
-        except:
-            logger.warning("failed to open probably second time it was tried")
+        except Exception as e:
+            logger.exception("failed to open probably second time it was tried")
         else:
             logger.info("Uploading %s" % local_path)
             try:
                 self.s3.Bucket(self.bucket).put_object(Key=key, Body=data)
-            except:
-                logger.warning("Upload failed will try again next time")
-                pass
+            except Exception as e:
+                logger.exception("Upload failed will try again next time")
                 data.close()
             else:
                 data.close()
                 if self.delete_after_upload:
                     try:
                         os.unlink(local_path)
-                    except:
-                        logger.warning("failed to delete probably second time it was tried")
-                        pass
+                    except Exception as e:
+                        logger.exception("failed to delete probably second time it was tried")
 
     def monitor(self):
         logger.info("Starting to monitor files for upload")
