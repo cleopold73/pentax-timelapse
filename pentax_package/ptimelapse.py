@@ -65,20 +65,23 @@ def main(args=None):
         uploader.key_path = arguments['-k']
         uploader.run()
 
-    while True:
-        if i > int(arguments['-c']):
-            logger.info("Finished")
-            break
-        filename = os.path.join(arguments['-d'], str(i).zfill(8) + '-' + arguments['-f'] + '.jpg')
-        logger.info("Taking Picture")
-        time_taken = time.time()
-        camera.take_picture(filename)
-        time_took = time.time() - time_taken
-        sleep_time = int(arguments['-l']) - time_took
-        if sleep_time > 0:
-            logger.info("Sleeping %f seconds" % sleep_time)
-            time.sleep(sleep_time)
-        i += 1
+    try:
+        while True:
+            if i > int(arguments['-c']):
+                logger.info("Finished")
+                break
+            filename = os.path.join(arguments['-d'], str(i).zfill(8) + '-' + arguments['-f'] + '.jpg')
+            logger.info("Taking Picture")
+            time_taken = time.time()
+            camera.take_picture(filename)
+            time_took = time.time() - time_taken
+            sleep_time = int(arguments['-l']) - time_took
+            if sleep_time > 0:
+                logger.info("Sleeping %f seconds" % sleep_time)
+                time.sleep(sleep_time)
+            i += 1
+    except KeyboardInterrupt:
+        logger.warning("Keyboard Interrupt Shutting down, will attempt to upload anything not uploaded")
 
     if arguments['-s']:
         uploader.stop = True
